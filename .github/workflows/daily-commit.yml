@@ -2,7 +2,7 @@ name: Daily Commit
 
 on:
   schedule:
-    - cron: '0 12 * * *'
+    - cron: '30 6 * * *'  # 12:00 PM IST
   workflow_dispatch:
 
 permissions:
@@ -15,15 +15,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Update activity
+      - name: Update activity file
         run: |
-          echo "Updated: $(date)" >> activity.txt
+          echo "Updated at: $(date)" >> activity.txt
+          echo "Random: $RANDOM" >> activity.txt
 
-      - name: Commit and Push
+      - name: Commit changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add activity.txt
-          git commit -m "Daily activity update" || exit 0
-          git push
+          git commit -m "Daily update $(date)" || exit 0
+
+      - name: Push changes
+        run: git push
